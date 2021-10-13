@@ -3,16 +3,16 @@ package lib
 import "errors"
 
 type IQueueChannel interface {
-	Push(int)
-	Pop() (int, error)
+	Push(interface{})
+	Pop() (interface{}, error)
 }
 
 type QueueChannel struct {
-	channel chan int
+	channel chan interface{}
 	size    int
 }
 
-func (q *QueueChannel) Push(a int) error {
+func (q *QueueChannel) Push(a interface{}) error {
 	if len(q.channel) >= q.size {
 		return errors.New("Queue overflow")
 	}
@@ -20,7 +20,7 @@ func (q *QueueChannel) Push(a int) error {
 	return nil
 }
 
-func (q *QueueChannel) Pop() (int, error) {
+func (q *QueueChannel) Pop() (interface{}, error) {
 	if len(q.channel) <= 0 {
 		return -1, errors.New("Queue underflow")
 	}
@@ -28,5 +28,5 @@ func (q *QueueChannel) Pop() (int, error) {
 }
 
 func NewQueueChannel(size int) *QueueChannel {
-	return &QueueChannel{make(chan int, size), size}
+	return &QueueChannel{make(chan interface{}, size), size}
 }
