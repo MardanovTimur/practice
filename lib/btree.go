@@ -59,20 +59,35 @@ func (bRoot *BRoot) hasFreeSpace() bool {
 	return len(bRoot.nodes) < 2*bRoot.getT()
 }
 
+func upgradeRoots(bRoot *BRoot) {
+	for _, node := range bRoot.nodes {
+		if node.left != nil {
+			subRoot := node.left
+			subRoot.parent = bRoot
+			subRootR := node.right
+			subRootR.parent = bRoot
+		}
+	}
+}
+
 func (bRoot *BRoot) splitRoot() *BRoot {
-	medianNode := bRoot.nodes[bRoot.getT()]
-	var leftNodes, rightNodes []*BNode = make([]*BNode, bRoot.getT()), make([]*BNode, len(bRoot.nodes[bRoot.getT()+1:]))
-	copy(leftNodes, bRoot.nodes[:bRoot.getT()])
-	copy(rightNodes, bRoot.nodes[bRoot.getT()+1:])
+	mNode := bRoot.nodes[bRoot.getT()]
+	medianNode := &BNode{mNode.value, mNode.data, nil, nil}
+
+	var leftNodes, rightNodes []*BNode = make([]*BNode, 0), make([]*BNode, 0)
+	leftNodes = append(leftNodes, bRoot.nodes[:bRoot.getT()]...)
+	rightNodes = append(rightNodes, bRoot.nodes[bRoot.getT()+1:]...)
 
 	medianNode.left = newRoot(bRoot, medianNode, leftNodes, bRoot.capacity)
 	medianNode.right = newRoot(bRoot, medianNode, rightNodes, bRoot.capacity)
 
+	upgradeRoots(medianNode.left)
+	upgradeRoots(medianNode.right)
+
 	if bRoot.isRoot {
-		bRoot.nodes = make([]*BNode, 1)
-		bRoot.nodes[0] = medianNode
+		bRoot.nodes = []*BNode{medianNode}
 		return bRoot
-	} else if bRoot.parent != nil {
+	} else {
 		medianNode.left.parent = bRoot.parent
 		medianNode.right.parent = bRoot.parent
 		bRoot.parent.insertNode(medianNode, true)
@@ -97,38 +112,31 @@ func compareNodes(node1, node2 *BNode) int {
 	}
 }
 
-func (bRoot *BRoot) selectRoot(newNode *BNode) *BRoot {
+func selectRoot(bRoot *BRoot, newNode *BNode) *BRoot {
 	// Select root for insert node recursive
 	if bRoot.isLeaf() {
 		// handle initial situation when bRoot is a Root
 		return bRoot
 	}
 	for _, node := range bRoot.nodes {
-		if node.left == nil {
-			continue
-		}
 		if compareNodes(newNode, node) <= 0 {
-			return node.left.selectRoot(newNode)
+			return selectRoot(node.left, newNode)
 		}
 	}
 	last := bRoot.nodes[len(bRoot.nodes)-1].right
 	if last != nil {
-		return last.selectRoot(newNode)
+		return selectRoot(last, newNode)
 	}
-
-	for _, node := range bRoot.nodes {
-		fmt.Printf("%v ,", node)
-	}
-	fmt.Printf("\nBroot not leaf is: %v", bRoot)
 	return nil
 }
 
 func (bRoot *BRoot) insertNode(node *BNode, reverse bool) {
-	insertRoot := bRoot
+	var insertRoot *BRoot = bRoot
 	if !reverse {
 		// Если идет операция вставки ключа, а не перестроения дерева обратное (рекурсивное)
-		insertRoot = bRoot.selectRoot(node)
+		insertRoot = selectRoot(bRoot, node)
 	}
+
 	var insertP int = len(insertRoot.nodes)
 	for i := 0; i < len(insertRoot.nodes); i++ {
 		if compareNodes(node, insertRoot.nodes[i]) <= 0 {
@@ -139,15 +147,19 @@ func (bRoot *BRoot) insertNode(node *BNode, reverse bool) {
 	// Вставка новой ноды и обновление програничников
 	newNodes := make([]*BNode, 0)
 	if insertP > 0 {
-		newNodes = insertRoot.nodes[:insertP]
+		newNodes = append(newNodes, insertRoot.nodes[:insertP]...)
 		// Ставим пограничные руты
-		insertRoot.nodes[insertP-1].right = node.left
+		if reverse {
+			newNodes[insertP-1].right = node.left
+		}
 	}
 	newNodes = append(newNodes, node)
 	if insertP < len(insertRoot.nodes) {
 		newNodes = append(newNodes, insertRoot.nodes[insertP:]...)
 		// Ставим пограничные руты
-		insertRoot.nodes[insertP].left = node.right
+		if reverse {
+			newNodes[insertP+1].left = node.right
+		}
 	}
 	insertRoot.nodes = newNodes
 
@@ -204,39 +216,27 @@ func (bRoot *BRoot) printBRootNodeValues() {
 	for i = 0; i < len(bRoot.nodes); i++ {
 		fmt.Printf("%v, ", bRoot.nodes[i].value)
 	}
+	// fmt.Printf("] %v - %v\n", bRoot, bRoot.parent)
 	fmt.Printf("]\n")
-	for i = 0; i < len(bRoot.nodes); i++ {
-		if bRoot.nodes[i].left != nil {
-			bRoot.nodes[i].left.printBRootNodeValues()
-		}
+
+	fmt.Print("  ")
+	if bRoot.nodes[0].right != nil {
+		bRoot.nodes[0].left.printBRootNodeValues()
 	}
-	if bRoot.nodes[i-1].right != nil {
-		bRoot.nodes[i-1].right.printBRootNodeValues()
+	for i = 0; i < len(bRoot.nodes); i++ {
+		if bRoot.nodes[i].right != nil {
+			bRoot.nodes[i].right.printBRootNodeValues()
+		}
 	}
 }
 
 func main() {
 	tree, _ := NewBTree(3)
 	fmt.Printf("Tree created %v\n", tree)
-	tree.AddKey(1, nil)
-	tree.AddKey(2, nil)
-	tree.AddKey(3, nil)
-	tree.AddKey(4, nil)
-	tree.AddKey(5, nil)
-	tree.AddKey(6, nil)
-	tree.AddKey(7, nil)
-	tree.AddKey(-1, nil)
-	tree.AddKey(6, nil)
-	tree.AddKey(7, nil)
-	tree.AddKey(-1, nil)
-	tree.AddKey(6, nil)
-	tree.AddKey(7, nil)
-	tree.AddKey(-1, nil)
-	tree.AddKey(6, nil)
-	tree.AddKey(7, nil)
-	tree.AddKey(-1, nil)
-	tree.AddKey(6, nil)
-	tree.AddKey(6, nil)
-	tree.AddKey(6, nil)
+	for i := 0; i < 100; i++ {
+		tree.AddKey(i, nil)
+	}
+	tree.AddKey(99, nil)
+	tree.AddKey(99, nil)
 	tree.printBRootNodeValues()
 }
