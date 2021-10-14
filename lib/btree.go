@@ -174,13 +174,24 @@ func (bRoot *BRoot) AddKey(value T, data V) {
 	bRoot.insertNode(node, false)
 }
 
-func (bRoot *BRoot) search(value T) (*BNode, error) {
-	// var searchNode *BNode = &BNode{value, nil, nil, nil}
-	// TODO finish it
-	for _, node := range bRoot.nodes {
-		if node.value == value {
-			return node, nil
+func (bRoot *BRoot) Search(value T) (*BNode, error) {
+	var searchNode *BNode = &BNode{value, nil, nil, nil}
+
+	var i int = 0
+	for i = 0; i < len(bRoot.nodes)-1; i++ {
+		if bRoot.nodes[i].value == searchNode.value {
+			return bRoot.nodes[i], nil
 		}
+		if compareNodes(searchNode, bRoot.nodes[i]) < 0 {
+			return bRoot.nodes[i].left.Search(searchNode.value)
+		} else if compareNodes(searchNode, bRoot.nodes[i+1]) < 0 {
+			return bRoot.nodes[i+1].left.Search(searchNode.value)
+		}
+	}
+	if compareNodes(searchNode, bRoot.nodes[i]) > 0 {
+		return bRoot.nodes[i].right.Search(searchNode.value)
+	} else if searchNode.value == bRoot.nodes[i].value {
+		return bRoot.nodes[i], nil
 	}
 	return nil, errors.New(fmt.Sprintf("Key %v not found", value))
 }
@@ -216,10 +227,7 @@ func (bRoot *BRoot) printBRootNodeValues() {
 	for i = 0; i < len(bRoot.nodes); i++ {
 		fmt.Printf("%v, ", bRoot.nodes[i].value)
 	}
-	// fmt.Printf("] %v - %v\n", bRoot, bRoot.parent)
 	fmt.Printf("]\n")
-
-	fmt.Print("  ")
 	if bRoot.nodes[0].right != nil {
 		bRoot.nodes[0].left.printBRootNodeValues()
 	}
@@ -238,5 +246,11 @@ func main() {
 	}
 	tree.AddKey(99, nil)
 	tree.AddKey(99, nil)
-	tree.printBRootNodeValues()
+
+	element, err := tree.Search(99)
+	if err == nil {
+		fmt.Printf("Found %v, \n", element)
+	} else {
+		fmt.Println(err)
+	}
 }
