@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"errors"
@@ -9,25 +9,25 @@ import (
 type T interface{}
 type V interface{}
 
-type BNode struct {
+type BTNode struct {
 	value T
 	data  V
 	left  *BRoot
 	right *BRoot
 }
 
-func (bNode *BNode) GetValue() T {
+func (bNode *BTNode) GetValue() T {
 	return bNode.value
 }
 
-func (bNode *BNode) GetData() V {
+func (bNode *BTNode) GetData() V {
 	return bNode.data
 }
 
 type BRoot struct {
 	parent     *BRoot
-	parentNode *BNode
-	nodes      []*BNode
+	parentNode *BTNode
+	nodes      []*BTNode
 	capacity   int
 	isRoot     bool
 }
@@ -72,9 +72,9 @@ func upgradeRoots(bRoot *BRoot) {
 
 func (bRoot *BRoot) splitRoot() *BRoot {
 	mNode := bRoot.nodes[bRoot.getT()]
-	medianNode := &BNode{mNode.value, mNode.data, nil, nil}
+	medianNode := &BTNode{mNode.value, mNode.data, nil, nil}
 
-	var leftNodes, rightNodes []*BNode = make([]*BNode, 0), make([]*BNode, 0)
+	var leftNodes, rightNodes []*BTNode = make([]*BTNode, 0), make([]*BTNode, 0)
 	leftNodes = append(leftNodes, bRoot.nodes[:bRoot.getT()]...)
 	rightNodes = append(rightNodes, bRoot.nodes[bRoot.getT()+1:]...)
 
@@ -85,7 +85,7 @@ func (bRoot *BRoot) splitRoot() *BRoot {
 	upgradeRoots(medianNode.right)
 
 	if bRoot.isRoot {
-		bRoot.nodes = []*BNode{medianNode}
+		bRoot.nodes = []*BTNode{medianNode}
 		return bRoot
 	} else {
 		medianNode.left.parent = bRoot.parent
@@ -95,7 +95,7 @@ func (bRoot *BRoot) splitRoot() *BRoot {
 	return bRoot.parent
 }
 
-func compareNodes(node1, node2 *BNode) int {
+func compareNodes(node1, node2 *BTNode) int {
 	switch node1.value.(type) {
 	case int:
 		if node1.value.(int) > node2.value.(int) {
@@ -112,7 +112,7 @@ func compareNodes(node1, node2 *BNode) int {
 	}
 }
 
-func selectRoot(bRoot *BRoot, newNode *BNode) *BRoot {
+func selectRoot(bRoot *BRoot, newNode *BTNode) *BRoot {
 	// Select root for insert node recursive
 	if bRoot.isLeaf() {
 		// handle initial situation when bRoot is a Root
@@ -130,7 +130,7 @@ func selectRoot(bRoot *BRoot, newNode *BNode) *BRoot {
 	return nil
 }
 
-func (bRoot *BRoot) insertNode(node *BNode, reverse bool) {
+func (bRoot *BRoot) insertNode(node *BTNode, reverse bool) {
 	var insertRoot *BRoot = bRoot
 	if !reverse {
 		// Если идет операция вставки ключа, а не перестроения дерева обратное (рекурсивное)
@@ -145,7 +145,7 @@ func (bRoot *BRoot) insertNode(node *BNode, reverse bool) {
 		}
 	}
 	// Вставка новой ноды и обновление програничников
-	newNodes := make([]*BNode, 0)
+	newNodes := make([]*BTNode, 0)
 	if insertP > 0 {
 		newNodes = append(newNodes, insertRoot.nodes[:insertP]...)
 		// Ставим пограничные руты
@@ -169,13 +169,13 @@ func (bRoot *BRoot) insertNode(node *BNode, reverse bool) {
 }
 
 func (bRoot *BRoot) AddKey(value T, data V) {
-	var node *BNode = &BNode{value, data, nil, nil}
+	var node *BTNode = &BTNode{value, data, nil, nil}
 
 	bRoot.insertNode(node, false)
 }
 
-func (bRoot *BRoot) Search(value T) (*BNode, error) {
-	var searchNode *BNode = &BNode{value, nil, nil, nil}
+func (bRoot *BRoot) Search(value T) (*BTNode, error) {
+	var searchNode *BTNode = &BTNode{value, nil, nil, nil}
 
 	var i int = 0
 	for i = 0; i < len(bRoot.nodes)-1; i++ {
@@ -196,7 +196,7 @@ func (bRoot *BRoot) Search(value T) (*BNode, error) {
 	return nil, errors.New(fmt.Sprintf("Key %v not found", value))
 }
 
-func newRoot(parentRoot *BRoot, parentNode *BNode, nodes []*BNode, capacity int) *BRoot {
+func newRoot(parentRoot *BRoot, parentNode *BTNode, nodes []*BTNode, capacity int) *BRoot {
 	return &BRoot{
 		parentRoot,
 		parentNode,
@@ -214,7 +214,7 @@ func NewBTree(capacity int) (*BRoot, error) {
 	var broot *BRoot = newRoot(
 		nil,
 		nil,
-		make([]*BNode, 0),
+		make([]*BTNode, 0),
 		capacity,
 	)
 	broot.isRoot = true
@@ -235,22 +235,5 @@ func (bRoot *BRoot) printBRootNodeValues() {
 		if bRoot.nodes[i].right != nil {
 			bRoot.nodes[i].right.printBRootNodeValues()
 		}
-	}
-}
-
-func main() {
-	tree, _ := NewBTree(3)
-	fmt.Printf("Tree created %v\n", tree)
-	for i := 0; i < 100; i++ {
-		tree.AddKey(i, nil)
-	}
-	tree.AddKey(99, nil)
-	tree.AddKey(99, nil)
-
-	element, err := tree.Search(99)
-	if err == nil {
-		fmt.Printf("Found %v, \n", element)
-	} else {
-		fmt.Println(err)
 	}
 }

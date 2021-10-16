@@ -1,0 +1,80 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AddKey	lib/btree.go	/^func (bRoot *BRoot) AddKey(value T, data V) {$/;"	f
+BNode	lib/btree.go	/^type BNode struct {$/;"	t
+BRoot	lib/btree.go	/^type BRoot struct {$/;"	t
+GetData	lib/btree.go	/^func (bNode *BNode) GetData() V {$/;"	f
+GetValue	lib/btree.go	/^func (bNode *BNode) GetValue() T {$/;"	f
+Head	heap_sort.go	/^func (h *Heap) Head(i int) int {$/;"	f
+Heap	heap_sort.go	/^type Heap struct {$/;"	t
+HeapSort	heap_sort.go	/^func HeapSort(heap *Heap) {$/;"	f
+Heapify	heap_sort.go	/^func (h *Heap) Heapify(i int, n int) {$/;"	f
+IHeap	heap_sort.go	/^type IHeap interface {$/;"	t
+IQueue	lib/queue.go	/^type IQueue interface {$/;"	t
+IQueueChannel	lib/queue_channel.go	/^type IQueueChannel interface {$/;"	t
+Left	heap_sort.go	/^func (h *Heap) Left(i int) int {$/;"	f
+Length	heap_sort.go	/^func (h *Heap) Length() int {$/;"	f
+MAX_INT	merge_sort.go	/^var MAX_INT int = int(1) << 32$/;"	v
+MergeFunc	merge_sort.go	/^func MergeFunc(arr []int, a, q, b int) []int {$/;"	f
+MergeSort	merge_sort.go	/^func MergeSort(arr []int, a, b int) []int {$/;"	f
+NewBTree	lib/btree.go	/^func NewBTree(capacity int) (*BRoot, error) {$/;"	f
+NewQueue	lib/queue.go	/^func NewQueue(size int) *Queue {$/;"	f
+NewQueueChannel	lib/queue_channel.go	/^func NewQueueChannel(size int) *QueueChannel {$/;"	f
+Pop	lib/queue.go	/^func (q *Queue) Pop() (interface{}, error) {$/;"	f
+Pop	lib/queue_channel.go	/^func (q *QueueChannel) Pop() (interface{}, error) {$/;"	f
+Push	lib/queue.go	/^func (q *Queue) Push(a interface{}) error {$/;"	f
+Push	lib/queue_channel.go	/^func (q *QueueChannel) Push(a interface{}) error {$/;"	f
+Queue	lib/queue.go	/^type Queue struct {$/;"	t
+QueueChannel	lib/queue_channel.go	/^type QueueChannel struct {$/;"	t
+Right	heap_sort.go	/^func (h *Heap) Right(i int) int {$/;"	f
+Search	lib/btree.go	/^func (bRoot *BRoot) Search(value T) (*BNode, error) {$/;"	f
+T	lib/btree.go	/^type T interface{}$/;"	t
+V	lib/btree.go	/^type V interface{}$/;"	t
+bucket	bucket_sort.go	/^var bucket []int = make([]int, bucketSize)$/;"	v
+bucketSize	bucket_sort.go	/^var bucketSize = 401$/;"	v
+bucketSort	bucket_sort.go	/^func bucketSort(arr []int) []int {$/;"	f
+check_and_move	5.py	/^def check_and_move(a, b):$/;"	f
+compareNodes	lib/btree.go	/^func compareNodes(node1, node2 *BNode) int {$/;"	f
+distance	6.py	/^def distance(x1, x2):$/;"	f
+generate_sequence	4.py	/^def generate_sequence(n, arr, count_op_arr, count_cl_arr):$/;"	f
+getPointer	quick_sort.go	/^func getPointer(arr []int, a, b int) int {$/;"	f
+getT	lib/btree.go	/^func (bRoot *BRoot) getT() int {$/;"	f
+hasFreeSpace	lib/btree.go	/^func (bRoot *BRoot) hasFreeSpace() bool {$/;"	f
+insertNode	lib/btree.go	/^func (bRoot *BRoot) insertNode(node *BNode, reverse bool) {$/;"	f
+isLeaf	lib/btree.go	/^func (bRoot *BRoot) isLeaf() bool {$/;"	f
+isNodesEmpty	lib/btree.go	/^func (bRoot *BRoot) isNodesEmpty() bool {$/;"	f
+lib	lib/queue.go	/^package lib$/;"	p
+lib	lib/queue_channel.go	/^package lib$/;"	p
+main	1.py	/^def main():$/;"	f
+main	2.py	/^def main():$/;"	f
+main	3.py	/^def main():$/;"	f
+main	4.py	/^def main():$/;"	f
+main	5.py	/^def main():$/;"	f
+main	6.py	/^def main():$/;"	f
+main	bucket_sort.go	/^func main() {$/;"	f
+main	bucket_sort.go	/^package main$/;"	p
+main	custom_queue.go	/^func main() {$/;"	f
+main	custom_queue.go	/^package main$/;"	p
+main	heap_sort.go	/^func main() {$/;"	f
+main	heap_sort.go	/^package main$/;"	p
+main	insertion_sort.go	/^func main() {$/;"	f
+main	insertion_sort.go	/^package main$/;"	p
+main	lib/btree.go	/^func main() {$/;"	f
+main	lib/btree.go	/^package main$/;"	p
+main	merge_sort.go	/^func main() {$/;"	f
+main	merge_sort.go	/^package main$/;"	p
+main	quick_sort.go	/^func main() {$/;"	f
+main	quick_sort.go	/^package main$/;"	p
+minimal_distance	6.py	/^def minimal_distance(current, end, fuel, cities, visited, all_dists):$/;"	f
+newRoot	lib/btree.go	/^func newRoot(parentRoot *BRoot, parentNode *BNode, nodes []*BNode, capacity int) *BRoot {$/;"	f
+printBRootNodeValues	lib/btree.go	/^func (bRoot *BRoot) printBRootNodeValues() {$/;"	f
+quickSort	quick_sort.go	/^func quickSort(arr []int) []int {$/;"	f
+quickSortRect	quick_sort.go	/^func quickSortRect(arr []int, a, b int) []int {$/;"	f
+selectRoot	lib/btree.go	/^func selectRoot(bRoot *BRoot, newNode *BNode) *BRoot {$/;"	f
+sort	insertion_sort.go	/^func sort(arr []int) {$/;"	f
+splitRoot	lib/btree.go	/^func (bRoot *BRoot) splitRoot() *BRoot {$/;"	f
+upgradeRoots	lib/btree.go	/^func upgradeRoots(bRoot *BRoot) {$/;"	f
