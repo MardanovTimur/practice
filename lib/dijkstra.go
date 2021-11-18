@@ -34,15 +34,10 @@ func MinDijkstra(start, finish int, adj [][]int) []int {
 
 	Min := getMinAdj(adj)
 
-	// initialize cant move
-	for i := 1; i < len(D); i++ {
-		D[i] = 0
-	}
-	// initialize start vertex
-	S[start] = struct{}{}
 	// current vertex
 	var currentVertex int = start
 	for {
+		S[currentVertex] = struct{}{}
 		for j := 0; j < len(adj[currentVertex]); j++ {
 			if adj[currentVertex][j] > Min {
 				// can go to vertex
@@ -74,8 +69,6 @@ func MinDijkstra(start, finish int, adj [][]int) []int {
 		}
 		if previousCurrentVertex == currentVertex {
 			break
-		} else {
-			S[currentVertex] = struct{}{}
 		}
 	}
 
